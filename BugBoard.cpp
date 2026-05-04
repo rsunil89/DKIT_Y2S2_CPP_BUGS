@@ -132,7 +132,28 @@ void BugBoard::displayAllBugs() const {
 
     cout << "\n===== All Bugs =====\n";
     for (const Bug* b : bugs) {
-        cout << b->toString() << "\n";
+        string dirStr;
+        switch (b->getDirection()) {
+            case Direction::NORTH: dirStr = "North"; break;
+            case Direction::EAST:  dirStr = "East";  break;
+            case Direction::SOUTH: dirStr = "South"; break;
+            case Direction::WEST:  dirStr = "West";  break;
+            default:               dirStr = "None";  break;
+        }
+
+        cout << b->getId() << " "
+             << b->getType() << " "
+             << "(" << b->getPosition().first << "," << b->getPosition().second << ") "
+             << b->getHealth() << " "
+             << dirStr << " "
+             << (b->isAlive() ? "Alive" : "Dead");
+
+        // Show hopLength for Hoppers
+        if (b->getHopLength() > 0) {
+            cout << " " << b->getHopLength();
+        }
+
+        cout << "\n";
     }
     cout << "Total: " << bugs.size() << " bugs (" << countAlive() << " alive)\n";
 }

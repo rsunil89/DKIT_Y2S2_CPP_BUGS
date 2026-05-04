@@ -10,7 +10,8 @@ private:
 public:
     Hopper(int id, pair<int, int> pos, Direction dir, int health, int hopLength);
 
-    int getHopLength() const;
+    string getType() const override { return "Hopper"; }
+    int getHopLength() const override;
 
     void move() override;
 };

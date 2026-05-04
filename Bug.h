@@ -35,6 +35,12 @@ public:
     void setDirection(Direction dir);
     void kill();
 
+    // Virtual - each bug type returns its type name
+    virtual string getType() const = 0;
+
+    // Virtual - returns hop length (0 for non-hoppers)
+    virtual int getHopLength() const { return 0; }
+
     // Pure virtual - each bug type implements its own movement
     virtual void move() = 0;
 

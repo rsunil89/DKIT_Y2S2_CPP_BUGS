@@ -7,6 +7,7 @@ class Crawler : public Bug {
 public:
     Crawler(int id, pair<int, int> pos, Direction dir, int health);
 
+    string getType() const override { return "Crawler"; }
     void move() override;
 };
 
