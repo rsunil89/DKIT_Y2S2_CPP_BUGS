@@ -1,5 +1,6 @@
 #include "Crawler.h"
 #include <cstdlib>
+#include <ctime>
 
 Crawler::Crawler(int id, pair<int, int> pos, Direction dir, int health)
     : Bug(id, pos, dir, health) {}
@@ -7,15 +8,10 @@ Crawler::Crawler(int id, pair<int, int> pos, Direction dir, int health)
 void Crawler::move() {
     if (!alive) return;
 
-    // If way is blocked, turn 90 degrees clockwise
-    if (isWayBlocked()) {
-        switch (direction) {
-            case Direction::NORTH: direction = Direction::EAST;  break;
-            case Direction::EAST:  direction = Direction::SOUTH; break;
-            case Direction::SOUTH: direction = Direction::WEST;  break;
-            case Direction::WEST:  direction = Direction::NORTH; break;
-            default: break;
-        }
+    // If way is blocked, set a new random direction (repeat until bug can move forward)
+    while (isWayBlocked()) {
+        int randDir = rand() % 4 + 1;  // Random number between 1 and 4
+        direction = static_cast<Direction>(randDir);
     }
 
     // Move one cell in the current direction
@@ -24,20 +20,21 @@ void Crawler::move() {
 
     switch (direction) {
         case Direction::NORTH:
-            if (y > 0) y--;
+            y--;
             break;
         case Direction::EAST:
-            if (x < 9) x++;
+            x++;
             break;
         case Direction::SOUTH:
-            if (y < 9) y++;
+            y++;
             break;
         case Direction::WEST:
-            if (x > 0) x--;
+            x--;
             break;
         default:
             break;
     }
 
+    // Record new position in the crawler's path history
     setPosition({x, y});
 }
