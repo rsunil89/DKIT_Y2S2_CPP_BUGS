@@ -37,6 +37,7 @@ public:
     void setDirection(Direction dir);
     void kill();
     void setEatenBy(int bugId);
+    void takeDamage(int amount);
 
     // Virtual - each bug type returns its type name
     virtual string getType() const = 0;

@@ -212,7 +212,7 @@ void BugBoard::tap() {
         }
     }
 
-    // Step 2: Bugs on same cell fight - biggest health eats the rest
+    // Step 3: Bugs on same cell fight - 3-round paired fighting system
     vector<pair<int, int>> processedPositions;
 
     for (Bug* b : bugs) {
@@ -237,24 +237,55 @@ void BugBoard::tap() {
 
         if (bugsAtPos.size() <= 1) continue;
 
-        // Find the bug with the highest health
-        Bug* biggest = bugsAtPos[0];
-        for (Bug* candidate : bugsAtPos) {
-            if (candidate->getHealth() > biggest->getHealth()) {
-                biggest = candidate;
+        cout << "Fight at (" << pos.first << "," << pos.second << ")! ";
+        cout << bugsAtPos.size() << " bugs present.\n";
+
+        // Pair off bugs for 3-round fights
+        // Strategy: pair bugs by index (0 vs 1, 2 vs 3, etc.)
+        // If odd number, the last bug doesn't fight and remains unscathed
+        for (size_t i = 0; i + 1 < bugsAtPos.size(); i += 2) {
+            Bug* bugA = bugsAtPos[i];
+            Bug* bugB = bugsAtPos[i + 1];
+
+            cout << "  Bug " << bugA->getId() << " vs Bug " << bugB->getId() << "!\n";
+
+            // 3 rounds of fighting (stop early if one bug dies)
+            for (int round = 1; round <= 3; ++round) {
+                // Check if either bug is already dead
+                if (!bugA->isAlive() || !bugB->isAlive()) break;
+
+                // Both bugs incur random damage between 0-5
+                int damageA = rand() % 6;  // 0-5
+                int damageB = rand() % 6;  // 0-5
+
+                int healthBeforeA = bugA->getHealth();
+                int healthBeforeB = bugB->getHealth();
+
+                bugA->takeDamage(damageA);
+                bugB->takeDamage(damageB);
+
+                cout << "    Round " << round << ": Bug " << bugA->getId()
+                     << " takes " << damageA << " damage (health " << healthBeforeA << "->" << bugA->getHealth() << ")"
+                     << ", Bug " << bugB->getId()
+                     << " takes " << damageB << " damage (health " << healthBeforeB << "->" << bugB->getHealth() << ")\n";
+            }
+
+            // Determine winner/loser
+            if (!bugA->isAlive() && bugB->isAlive()) {
+                cout << "    Result: Bug " << bugB->getId() << " wins! Bug " << bugA->getId() << " is dead.\n";
+                bugA->setEatenBy(bugB->getId());
+            } else if (!bugB->isAlive() && bugA->isAlive()) {
+                cout << "    Result: Bug " << bugA->getId() << " wins! Bug " << bugB->getId() << " is dead.\n";
+                bugB->setEatenBy(bugA->getId());
+            } else if (!bugA->isAlive() && !bugB->isAlive()) {
+                cout << "    Result: Both bugs died!\n";
+            } else {
+                cout << "    Result: Both bugs survived with health " << bugA->getHealth() << " and " << bugB->getHealth() << "\n";
             }
         }
 
-        // Biggest bug eats all others
-        cout << "Fight at (" << pos.first << "," << pos.second << ")! ";
-        cout << "Bug " << biggest->getId() << " (health " << biggest->getHealth() << ") eats: ";
-
-        for (Bug* victim : bugsAtPos) {
-            if (victim != biggest) {
-                cout << victim->getId() << " ";
-                victim->kill();
-                victim->setEatenBy(biggest->getId());
-            }
+        if (bugsAtPos.size() % 2 != 0) {
+            cout << "  Bug " << bugsAtPos.back()->getId() << " has no opponent and remains unscathed.\n";
         }
         cout << "\n";
     }

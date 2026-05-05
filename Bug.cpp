@@ -37,6 +37,13 @@ void Bug::setEatenBy(int bugId) {
     eatenBy = bugId;
 }
 
+void Bug::takeDamage(int amount) {
+    health = max(0, health - amount);
+    if (health == 0) {
+        alive = false;
+    }
+}
+
 bool Bug::isWayBlocked() const {
     int x = position.first;
     int y = position.second;
