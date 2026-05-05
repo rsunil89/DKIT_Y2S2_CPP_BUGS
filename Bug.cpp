@@ -2,7 +2,7 @@
 #include <sstream>
 
 Bug::Bug(int id, pair<int, int> pos, Direction dir, int health)
-    : id(id), position(pos), direction(dir), health(health), alive(true) {
+    : id(id), position(pos), direction(dir), health(health), alive(true), eatenBy(-1) {
     path.push_back(pos);
 }
 
@@ -15,6 +15,8 @@ Direction Bug::getDirection() const { return direction; }
 int Bug::getHealth() const { return health; }
 
 bool Bug::isAlive() const { return alive; }
+
+int Bug::getEatenBy() const { return eatenBy; }
 
 const list<pair<int, int>>& Bug::getPath() const { return path; }
 
@@ -29,6 +31,10 @@ void Bug::setDirection(Direction dir) {
 
 void Bug::kill() {
     alive = false;
+}
+
+void Bug::setEatenBy(int bugId) {
+    eatenBy = bugId;
 }
 
 bool Bug::isWayBlocked() const {
@@ -67,13 +73,19 @@ string Bug::toString() const {
 }
 
 string Bug::lifeHistoryToString() const {
-    string history = to_string(id) + " Path: ";
+    string history = to_string(id) + " " + getType() + " Path: ";
     bool first = true;
     for (const auto& p : path) {
-        if (!first) history += " -> ";
+        if (!first) history += ",";
         history += "(" + to_string(p.first) + "," + to_string(p.second) + ")";
         first = false;
     }
-    history += " | Health: " + to_string(health) + " | " + (alive ? "Alive" : "Dead");
+    if (!alive && eatenBy != -1) {
+        history += " Eaten by " + to_string(eatenBy);
+    } else if (alive) {
+        history += " Alive!";
+    } else {
+        history += " Dead";
+    }
     return history;
 }

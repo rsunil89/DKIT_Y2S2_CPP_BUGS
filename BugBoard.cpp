@@ -253,6 +253,7 @@ void BugBoard::tap() {
             if (victim != biggest) {
                 cout << victim->getId() << " ";
                 victim->kill();
+                victim->setEatenBy(biggest->getId());
             }
         }
         cout << "\n";

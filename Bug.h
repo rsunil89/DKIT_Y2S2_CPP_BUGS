@@ -16,6 +16,7 @@ protected:
     Direction direction;
     int health;                // 1-20, biggest wins in a fight
     bool alive;
+    int eatenBy;               // ID of bug that ate this bug (-1 if alive or not eaten)
     list<pair<int, int>> path; // List of positions visited
 
 public:
@@ -28,12 +29,14 @@ public:
     Direction getDirection() const;
     int getHealth() const;
     bool isAlive() const;
+    int getEatenBy() const;
     const list<pair<int, int>>& getPath() const;
 
     // Setters
     void setPosition(pair<int, int> pos);
     void setDirection(Direction dir);
     void kill();
+    void setEatenBy(int bugId);
 
     // Virtual - each bug type returns its type name
     virtual string getType() const = 0;
