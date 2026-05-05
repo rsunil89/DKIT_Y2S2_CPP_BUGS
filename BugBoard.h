@@ -5,6 +5,16 @@
 #include <string>
 #include "Bug.h"
 
+// ANSI colour codes for enhanced console output
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define BOLD    "\033[1m"
+
 class BugBoard {
 private:
     vector<Bug*> bugs;
@@ -12,6 +22,9 @@ private:
 
     // Helper: get alive bugs at a specific position
     vector<Bug*> getBugsAtPosition(pair<int, int> pos);
+
+    // Display stats summary
+    void displayStats() const;
 
 public:
     BugBoard();

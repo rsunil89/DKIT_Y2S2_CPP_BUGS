@@ -191,7 +191,7 @@ void BugBoard::tap() {
         return;
     }
 
-    cout << "\n===== Tapping the Bug Board! =====\n";
+    cout << "\n" << BOLD << "===== Tapping the Bug Board! =====" << RESET << "\n";
 
     // Step 1: Pick one random alive bug to freeze (it does not move this tap)
     vector<Bug*> aliveBugs;
@@ -294,15 +294,22 @@ void BugBoard::tap() {
     }
 
     int remaining = countAlive();
-    cout << "Bugs remaining: " << remaining << "\n";
+    cout << BOLD << "Bugs remaining: " << remaining << RESET << "\n";
+
+    // Enhanced: Show stats after each tap
+    displayStats();
 
     if (remaining == 1) {
-        cout << "\n*** END POINT REACHED: Only one bug remains! ***\n";
+        cout << "\n" << BOLD << GREEN << "=============================================" << RESET << "\n";
+        cout << BOLD << GREEN << "   *** END POINT REACHED! ***" << RESET << "\n";
+        cout << BOLD << GREEN << "   THE LAST BUG STANDING" << RESET << "\n";
+        cout << BOLD << GREEN << "=============================================" << RESET << "\n";
         for (Bug* b : bugs) {
             if (b->isAlive()) {
-                cout << "Winner: " << b->toString() << "\n";
+                cout << BOLD << YELLOW << "  Winner: " << b->toString() << RESET << "\n";
             }
         }
+        cout << BOLD << GREEN << "=============================================\n" << RESET;
     }
 }
 
@@ -440,6 +447,33 @@ int BugBoard::countAlive() const {
         if (b->isAlive()) count++;
     }
     return count;
+}
+
+// ============================================================
+// Enhanced: Display stats summary (by type)
+// ============================================================
+void BugBoard::displayStats() const {
+    int alive = countAlive();
+    int dead = bugs.size() - alive;
+
+    int crawlerAlive = 0, hopperAlive = 0, flyerAlive = 0;
+    int crawlerDead = 0, hopperDead = 0, flyerDead = 0;
+
+    for (const Bug* b : bugs) {
+        if (b->getType() == "Crawler") {
+            b->isAlive() ? crawlerAlive++ : crawlerDead++;
+        } else if (b->getType() == "Hopper") {
+            b->isAlive() ? hopperAlive++ : hopperDead++;
+        } else if (b->getType() == "Flyer") {
+            b->isAlive() ? flyerAlive++ : flyerDead++;
+        }
+    }
+
+    cout << "\n" << BOLD << "===== Board Stats =====" << RESET << "\n";
+    cout << GREEN << "Alive: " << alive << RESET << " | " << RED << "Dead: " << dead << RESET << "\n";
+    cout << "  " << CYAN << "Crawlers:" << RESET << " " << GREEN << crawlerAlive << " alive" << RESET << ", " << RED << crawlerDead << " dead" << RESET << "\n";
+    cout << "  " << CYAN << "Hoppers:" << RESET << "  " << GREEN << hopperAlive << " alive" << RESET << ", " << RED << hopperDead << " dead" << RESET << "\n";
+    cout << "  " << CYAN << "Flyers:" << RESET << "   " << GREEN << flyerAlive << " alive" << RESET << ", " << RED << flyerDead << " dead" << RESET << "\n";
 }
 
 // ============================================================
