@@ -190,9 +190,24 @@ void BugBoard::tap() {
 
     cout << "\n===== Tapping the Bug Board! =====\n";
 
-    // Step 1: All alive bugs move
+    // Step 1: Pick one random alive bug to freeze (it does not move this tap)
+    vector<Bug*> aliveBugs;
     for (Bug* b : bugs) {
         if (b->isAlive()) {
+            aliveBugs.push_back(b);
+        }
+    }
+
+    Bug* frozenBug = nullptr;
+    if (!aliveBugs.empty()) {
+        int frozenIndex = rand() % aliveBugs.size();
+        frozenBug = aliveBugs[frozenIndex];
+        cout << "Bug " << frozenBug->getId() << " is frozen and will not move this tap.\n";
+    }
+
+    // Step 2: All alive bugs move (except the frozen one)
+    for (Bug* b : bugs) {
+        if (b->isAlive() && b != frozenBug) {
             b->move();
         }
     }
