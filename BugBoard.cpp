@@ -324,7 +324,7 @@ void BugBoard::displayAllCells() const {
         cout << "\n";
     }
 
-    // Also list all cells with bugs in detail
+    // Also list all cells with bugs in detail (spec format)
     cout << "\n===== Cells with Bugs (Detailed) =====\n";
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 10; ++x) {
@@ -336,14 +336,16 @@ void BugBoard::displayAllCells() const {
                 }
             }
 
-            if (!bugsHere.empty()) {
-                cout << "Cell (" << x << "," << y << "): ";
+            cout << "(" << x << "," << y << "): ";
+            if (bugsHere.empty()) {
+                cout << "empty";
+            } else {
                 for (size_t i = 0; i < bugsHere.size(); ++i) {
-                    cout << bugsHere[i]->toString();
-                    if (i < bugsHere.size() - 1) cout << " | ";
+                    if (i > 0) cout << ", ";
+                    cout << bugsHere[i]->getType() << " " << bugsHere[i]->getId();
                 }
-                cout << "\n";
             }
+            cout << "\n";
         }
     }
 }
