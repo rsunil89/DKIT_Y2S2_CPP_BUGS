@@ -1,6 +1,7 @@
 #include "BugBoard.h"
 #include "Crawler.h"
 #include "Hopper.h"
+#include "Flyer.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -103,6 +104,8 @@ bool BugBoard::initializeFromFile(const string& filename) {
             getline(ss, token, ';');
             int hopLength = stoi(token);
             bug = new Hopper(id, pos, direction, health, hopLength);
+        } else if (typeStr == "F" || typeStr == "f") {
+            bug = new Flyer(id, pos, direction, health);
         } else {
             cout << "Warning: Unknown bug type '" << typeStr << "' on line " << lineNum << "\n";
             continue;

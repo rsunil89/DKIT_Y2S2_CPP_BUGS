@@ -6,5 +6,6 @@ add_executable(BugLife
     Bug.cpp 
     Crawler.cpp 
     Hopper.cpp 
+    Flyer.cpp 
     BugBoard.cpp
 )
