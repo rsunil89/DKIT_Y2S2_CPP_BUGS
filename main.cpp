@@ -1,7 +1,15 @@
 #include <iostream>
+#include <ctime>
 #include "BugBoard.h"
 
 using namespace std;
+
+string getCurrentDateTime() {
+    time_t now = time(nullptr);
+    char buf[80];
+    strftime(buf, sizeof(buf), "%Y%m%d_%H%M%S", localtime(&now));
+    return string(buf);
+}
 
 int main() {
     BugBoard board;
@@ -77,10 +85,10 @@ int main() {
             }
             case 8: {
                 if (!initialized) { cout << "No data to save. Goodbye!\n"; break; }
-                string filename;
-                cout << "Enter filename to save life history: ";
-                cin >> filename;
-                board.writeLifeHistoryToFile(filename);
+                {
+                    string filename = "bugs_life_history_" + getCurrentDateTime() + ".out";
+                    board.writeLifeHistoryToFile(filename);
+                }
                 cout << "Exiting program. Goodbye!\n";
                 break;
             }
